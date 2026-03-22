@@ -13,7 +13,7 @@ function enviarRespuestaInvisible(respuesta) {
   // Crear un formulario oculto dinámicamente
   const form = document.createElement("form");
   form.method = "POST";
-  form.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+  form.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse?usp=pp_url`;
   form.target = "hidden-iframe";
   form.style.display = "none";
 
