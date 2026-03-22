@@ -1,8 +1,15 @@
 // ==================== CONFIGURACIÓN GOOGLE FORM ====================
+// ==================== CONFIGURACIÓN GOOGLE FORM ====================
 const GOOGLE_FORM_ID =
   "1FAIpQLSdEQpuJgTnmt580D6CqEwiPKW2o3kHJW6DMp9omGBd_6oprVw";
 const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
+
+// Crear un iframe oculto para enviar el formulario
+const iframe = document.createElement("iframe");
+iframe.name = "hidden-iframe";
+iframe.style.display = "none";
+document.body.appendChild(iframe);
 
 function enviarRespuestaInvisible(respuesta) {
   const ahora = new Date();
@@ -10,25 +17,40 @@ function enviarRespuestaInvisible(respuesta) {
     timeZone: "America/Caracas",
   });
 
-  // Crear la URL con los parámetros
-  const url = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+  // Crear un formulario temporal
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+  form.target = "hidden-iframe";
+  form.style.display = "none";
 
-  // Crear el cuerpo de la petición con los datos
-  const bodyData = new URLSearchParams();
-  bodyData.append(ENTRY_RESPUESTA, respuesta);
-  bodyData.append(ENTRY_FECHA, fechaHora);
-  bodyData.append("submit", "Submit"); // Parámetro requerido
+  // Agregar campos
+  const inputRespuesta = document.createElement("input");
+  inputRespuesta.type = "text";
+  inputRespuesta.name = ENTRY_RESPUESTA;
+  inputRespuesta.value = respuesta;
+  form.appendChild(inputRespuesta);
+
+  const inputFecha = document.createElement("input");
+  inputFecha.type = "text";
+  inputFecha.name = ENTRY_FECHA;
+  inputFecha.value = fechaHora;
+  form.appendChild(inputFecha);
+
+  // Agregar submit requerido
+  const inputSubmit = document.createElement("input");
+  inputSubmit.type = "submit";
+  inputSubmit.name = "submit";
+  inputSubmit.value = "Enviar";
+  form.appendChild(inputSubmit);
+
+  document.body.appendChild(form);
 
   console.log(`📤 ${respuesta} - ${fechaHora}`);
 
-  fetch(url, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: bodyData.toString(),
-  }).catch((e) => console.log("Error:", e));
+  // Enviar y limpiar
+  form.submit();
+  setTimeout(() => form.remove(), 1000);
 }
 
 // ==================== DATOS DE LAS PÁGINAS ====================
