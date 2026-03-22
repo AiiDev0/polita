@@ -4,22 +4,23 @@ const GOOGLE_FORM_ID =
 const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/TU_ID/exec";
+
 function enviarRespuestaInvisible(respuesta) {
   const ahora = new Date();
   const fechaHora = ahora.toLocaleString("es-VE", {
     timeZone: "America/Caracas",
   });
 
-  // Construir URL con todos los parámetros
-  const url = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse?${ENTRY_RESPUESTA}=${encodeURIComponent(respuesta)}&${ENTRY_FECHA}=${encodeURIComponent(fechaHora)}&submit=Submit`;
-
-  console.log(`📤 ${respuesta} - ${fechaHora}`);
-
-  // Usar fetch con no-cors y enviar como GET (más simple)
-  fetch(url, {
-    method: "GET",
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
     mode: "no-cors",
-  }).catch((e) => console.log("Error:", e));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      respuesta: respuesta,
+      fecha: fechaHora,
+    }),
+  });
 }
 
 // ==================== DATOS DE LAS PÁGINAS ====================
