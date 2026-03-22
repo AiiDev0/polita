@@ -1,37 +1,5 @@
-// ==================== CONFIGURACIÓN GOOGLE FORM ====================
-const GOOGLE_FORM_ID =
-  "1FAIpQLSdEQpuJgTnmt580D6CqEwiPKW2o3kHJW6DMp9omGBd_6oprVw";
-const ENTRY_RESPUESTA = "entry.37528652";
-const ENTRY_FECHA = "entry.1237721720";
-
-function enviarRespuestaInvisible(respuesta) {
-  const ahora = new Date();
-  const fechaHora = ahora.toLocaleString("es-VE", {
-    timeZone: "America/Caracas",
-  });
-
-  const formData = new FormData();
-  formData.append(ENTRY_RESPUESTA, respuesta);
-  formData.append(ENTRY_FECHA, fechaHora);
-
-  console.log(`📤 Registrando respuesta: ${respuesta} - ${fechaHora}`);
-
-  fetch(`https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`, {
-    method: "POST",
-    mode: "no-cors",
-    body: formData,
-  })
-    .then(() => {
-      console.log(`✅ Respuesta guardada: ${respuesta}`);
-    })
-    .catch((error) => {
-      console.log(
-        `⚠️ Se registró localmente: ${respuesta} (error de red: ${error.message})`,
-      );
-    });
-}
-
 // ==================== DATOS DE LAS PÁGINAS ====================
+// ¡CAMBIAR! Pon aquí tus fotos y textos
 const paginas = [
   {
     tipo: "historia",
@@ -74,6 +42,7 @@ function generarPaginas() {
   container.innerHTML = "";
   screens = [];
 
+  // Generar páginas de historia (dentro del app)
   paginas.forEach((pagina, idx) => {
     const screen = document.createElement("div");
     screen.className = `screen ${idx === 0 ? "active" : "hidden"}`;
@@ -96,6 +65,7 @@ function generarPaginas() {
   });
 }
 
+// ==================== NAVEGACIÓN ====================
 function cambiarPagina(index) {
   if (index < 0 || index >= paginas.length) return;
 
@@ -106,26 +76,39 @@ function cambiarPagina(index) {
   currentIndex = index;
 }
 
+// ==================== PANTALLA FINAL FULL SCREEN ====================
 function mostrarFinal() {
+  // Ocultar el app normal
   const app = document.getElementById("app");
   app.style.display = "none";
 
+  // Crear la pantalla final si no existe
   if (!document.getElementById("final-screen")) {
     crearPantallaFinal();
   } else {
     document.getElementById("final-screen").style.display = "flex";
     regenerarEstrellas();
-    // Limpiar respuestas visuales al volver a abrir
-    limpiarRespuestasVisuales();
+    // Resetear respuestas y botones
+    resetearRespuestas();
   }
 }
 
-function limpiarRespuestasVisuales() {
+function resetearRespuestas() {
   const respuestaAceptar = document.getElementById("respuesta-aceptar");
   const respuestaRechazar = document.getElementById("respuesta-rechazar");
+  const btnAceptar = document.getElementById("btn-aceptar");
+  const btnRechazar = document.getElementById("btn-rechazar");
 
   if (respuestaAceptar) respuestaAceptar.classList.remove("mostrar");
   if (respuestaRechazar) respuestaRechazar.classList.remove("mostrar");
+  if (btnAceptar) {
+    btnAceptar.disabled = false;
+    btnAceptar.style.opacity = "1";
+  }
+  if (btnRechazar) {
+    btnRechazar.disabled = false;
+    btnRechazar.style.opacity = "1";
+  }
 }
 
 function crearPantallaFinal() {
@@ -145,7 +128,8 @@ function crearPantallaFinal() {
                     </div>
                     <div id="respuesta-aceptar" class="respuesta">
                         <p style="font-size: 1.5rem; margin-top: 1rem;">¡Gracias por hacer mi vida más bonita! 🌟</p>
-                        <p style="font-size: 1.2rem; margin-top: 0.5rem;">Te quiero mucho ❤️</p>
+                        <p style="font-size: 1.2rem; margin-top: 0.5rem;">Te amo mucho ❤️</p>
+                        <p style="font-size: 1.2rem; margin-top: 0.5rem;">Escribeme!! 😏</p>
                     </div>
                     <div id="respuesta-rechazar" class="respuesta">
                         <div class="respuesta-triste">
@@ -160,34 +144,48 @@ function crearPantallaFinal() {
   regenerarEstrellas();
 }
 
-// ==================== RESPUESTAS - CADA VEZ SE REGISTRA ====================
+// ==================== RESPUESTAS DE LOS BOTONES ====================
 function respuestaAceptar() {
-  // Enviar a Google Sheets (CADA VEZ QUE PRESIONE)
-  enviarRespuestaInvisible("✅ ACEPTÓ");
-
-  // Mostrar mensaje visual de aceptar
   const respuestaDiv = document.getElementById("respuesta-aceptar");
   const respuestaRechazarDiv = document.getElementById("respuesta-rechazar");
+  const btnAceptar = document.getElementById("btn-aceptar");
+  const btnRechazar = document.getElementById("btn-rechazar");
 
+  // Ocultar la otra respuesta si está visible
   if (respuestaRechazarDiv) respuestaRechazarDiv.classList.remove("mostrar");
+
+  // Mostrar respuesta de aceptar
   respuestaDiv.classList.add("mostrar");
 
-  // Efecto de corazones (cada vez)
+  // Deshabilitar ambos botones
+  btnAceptar.disabled = true;
+  btnAceptar.style.opacity = "0.5";
+  btnRechazar.disabled = true;
+  btnRechazar.style.opacity = "0.5";
+
+  // Crear corazones flotantes
   crearCorazones();
 }
 
 function respuestaRechazar() {
-  // Enviar a Google Sheets (CADA VEZ QUE PRESIONE)
-  enviarRespuestaInvisible("❌ RECHAZÓ");
-
-  // Mostrar mensaje visual de rechazo
   const respuestaDiv = document.getElementById("respuesta-rechazar");
   const respuestaAceptarDiv = document.getElementById("respuesta-aceptar");
+  const btnAceptar = document.getElementById("btn-aceptar");
+  const btnRechazar = document.getElementById("btn-rechazar");
 
+  // Ocultar la otra respuesta si está visible
   if (respuestaAceptarDiv) respuestaAceptarDiv.classList.remove("mostrar");
+
+  // Mostrar respuesta de rechazo
   respuestaDiv.classList.add("mostrar");
 
-  // Efecto de hojas tristes (cada vez)
+  // Deshabilitar ambos botones
+  btnAceptar.disabled = true;
+  btnAceptar.style.opacity = "0.5";
+  btnRechazar.disabled = true;
+  btnRechazar.style.opacity = "0.5";
+
+  // Crear efecto de hojas cayendo (triste)
   crearHojasTristes();
 }
 
@@ -232,7 +230,7 @@ function crearHojasTristes() {
   }
 }
 
-// ==================== ESTRELLAS ====================
+// ==================== ESTRELLAS QUE CUBREN TODA LA PANTALLA ====================
 function regenerarEstrellas() {
   const container = document.getElementById("estrellas-container");
   if (!container) return;
@@ -261,6 +259,7 @@ function regenerarEstrellas() {
     container.appendChild(estrella);
   }
 
+  // Estrellas más grandes (brillantes)
   for (let i = 0; i < 50; i++) {
     const estrella = document.createElement("div");
     estrella.className = "estrella";
@@ -276,6 +275,7 @@ function regenerarEstrellas() {
   }
 }
 
+// ==================== REINICIAR ESTRELLAS AL GIRAR PANTALLA ====================
 let resizeTimeout;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimeout);
@@ -289,4 +289,5 @@ window.addEventListener("resize", () => {
   }, 150);
 });
 
+// ==================== INICIALIZAR ====================
 generarPaginas();
