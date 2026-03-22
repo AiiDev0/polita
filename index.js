@@ -14,24 +14,20 @@ function enviarRespuestaInvisible(respuesta) {
   formData.append(ENTRY_RESPUESTA, respuesta);
   formData.append(ENTRY_FECHA, fechaHora);
 
-  console.log(`📤 Registrando respuesta: ${respuesta} - ${fechaHora}`);
+  console.log(`📤 ${respuesta} - ${fechaHora}`);
 
   fetch(`https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`, {
     method: "POST",
     mode: "no-cors",
-    body: formData,
-  })
-    .then(() => {
-      console.log(`✅ Respuesta guardada: ${respuesta}`);
-    })
-    .catch((error) => {
-      console.log(
-        `⚠️ Se registró localmente: ${respuesta} (error de red: ${error.message})`,
-      );
-    });
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams(formData).toString(),
+  }).catch((e) => console.log("error:", e));
 }
 
 // ==================== DATOS DE LAS PÁGINAS ====================
+// 🔴 CAMBIA AQUÍ TUS FOTOS Y TEXTOS
 const paginas = [
   {
     tipo: "historia",
@@ -115,7 +111,6 @@ function mostrarFinal() {
   } else {
     document.getElementById("final-screen").style.display = "flex";
     regenerarEstrellas();
-    // Limpiar respuestas visuales al volver a abrir
     limpiarRespuestasVisuales();
   }
 }
@@ -160,34 +155,32 @@ function crearPantallaFinal() {
   regenerarEstrellas();
 }
 
-// ==================== RESPUESTAS - CADA VEZ SE REGISTRA ====================
+// ==================== RESPUESTAS ====================
 function respuestaAceptar() {
-  // Enviar a Google Sheets (CADA VEZ QUE PRESIONE)
+  document.getElementById("btn-aceptar").disabled = true;
+  document.getElementById("btn-rechazar").disabled = true;
+
   enviarRespuestaInvisible("✅ ACEPTÓ");
 
-  // Mostrar mensaje visual de aceptar
   const respuestaDiv = document.getElementById("respuesta-aceptar");
   const respuestaRechazarDiv = document.getElementById("respuesta-rechazar");
 
   if (respuestaRechazarDiv) respuestaRechazarDiv.classList.remove("mostrar");
   respuestaDiv.classList.add("mostrar");
-
-  // Efecto de corazones (cada vez)
   crearCorazones();
 }
 
 function respuestaRechazar() {
-  // Enviar a Google Sheets (CADA VEZ QUE PRESIONE)
+  document.getElementById("btn-aceptar").disabled = true;
+  document.getElementById("btn-rechazar").disabled = true;
+
   enviarRespuestaInvisible("❌ RECHAZÓ");
 
-  // Mostrar mensaje visual de rechazo
   const respuestaDiv = document.getElementById("respuesta-rechazar");
   const respuestaAceptarDiv = document.getElementById("respuesta-aceptar");
 
   if (respuestaAceptarDiv) respuestaAceptarDiv.classList.remove("mostrar");
   respuestaDiv.classList.add("mostrar");
-
-  // Efecto de hojas tristes (cada vez)
   crearHojasTristes();
 }
 
@@ -239,9 +232,7 @@ function regenerarEstrellas() {
 
   container.innerHTML = "";
 
-  const numEstrellas = 250;
-
-  for (let i = 0; i < numEstrellas; i++) {
+  for (let i = 0; i < 250; i++) {
     const estrella = document.createElement("div");
     estrella.className = "estrella";
 
