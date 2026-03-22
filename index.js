@@ -1,15 +1,8 @@
 // ==================== CONFIGURACIÓN GOOGLE FORM ====================
-// ==================== CONFIGURACIÓN GOOGLE FORM ====================
 const GOOGLE_FORM_ID =
   "1FAIpQLSdEQpuJgTnmt580D6CqEwiPKW2o3kHJW6DMp9omGBd_6oprVw";
 const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
-
-// Crear un iframe oculto para enviar el formulario
-const iframe = document.createElement("iframe");
-iframe.name = "hidden-iframe";
-iframe.style.display = "none";
-document.body.appendChild(iframe);
 
 function enviarRespuestaInvisible(respuesta) {
   const ahora = new Date();
@@ -17,41 +10,56 @@ function enviarRespuestaInvisible(respuesta) {
     timeZone: "America/Caracas",
   });
 
-  // Crear un formulario temporal
+  // Crear un formulario oculto dinámicamente
   const form = document.createElement("form");
   form.method = "POST";
   form.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
   form.target = "hidden-iframe";
   form.style.display = "none";
 
-  // Agregar campos
+  // Campo de respuesta
   const inputRespuesta = document.createElement("input");
   inputRespuesta.type = "text";
   inputRespuesta.name = ENTRY_RESPUESTA;
   inputRespuesta.value = respuesta;
   form.appendChild(inputRespuesta);
 
+  // Campo de fecha
   const inputFecha = document.createElement("input");
   inputFecha.type = "text";
   inputFecha.name = ENTRY_FECHA;
   inputFecha.value = fechaHora;
   form.appendChild(inputFecha);
 
-  // Agregar submit requerido
-  const inputSubmit = document.createElement("input");
-  inputSubmit.type = "submit";
-  inputSubmit.name = "submit";
-  inputSubmit.value = "Enviar";
-  form.appendChild(inputSubmit);
+  // ✅ PARÁMETROS OCULTOS QUE GOOGLE REQUIERE
+  const pageHistory = document.createElement("input");
+  pageHistory.type = "hidden";
+  pageHistory.name = "pageHistory";
+  pageHistory.value = "0";
+  form.appendChild(pageHistory);
 
+  const fbzx = document.createElement("input");
+  fbzx.type = "hidden";
+  fbzx.name = "fbzx";
+  fbzx.value = Math.random().toString(36).substring(2);
+  form.appendChild(fbzx);
+
+  // Agregar al body y enviar
   document.body.appendChild(form);
 
   console.log(`📤 ${respuesta} - ${fechaHora}`);
 
-  // Enviar y limpiar
   form.submit();
+
+  // Limpiar después de enviar
   setTimeout(() => form.remove(), 1000);
 }
+
+// Crear iframe oculto una sola vez
+const iframe = document.createElement("iframe");
+iframe.name = "hidden-iframe";
+iframe.style.display = "none";
+document.body.appendChild(iframe);
 
 // ==================== DATOS DE LAS PÁGINAS ====================
 // 🔴 CAMBIA AQUÍ TUS FOTOS Y TEXTOS
