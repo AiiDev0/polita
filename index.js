@@ -133,12 +133,12 @@ function crearPantallaFinal() {
                         "Quisiera tener el honor de ser tu novio"
                     </div>
                     <div class="botones-container">
-                        <button id="btn-aceptar" class="btn-aceptar" onclick="respuestaAceptar()">💖 Acepto 💖</button>
+                        <button id="btn-aceptar" class="btn-aceptar" onclick="respuestaAceptar()">🫶 Acepto 🫶</button>
                         <button id="btn-rechazar" class="btn-rechazar" onclick="respuestaRechazar()">💔 No acepto 💔</button>
                     </div>
                     <div id="respuesta-aceptar" class="respuesta">
                         <p style="font-size: 1.5rem; margin-top: 1rem;">¡Gracias por hacer mi vida más bonita! 🌟</p>
-                        <p style="font-size: 1.2rem; margin-top: 0.5rem;">Te quiero mucho ❤️</p>
+                        <p style="font-size: 1.2rem; margin-top: 0.5rem;">Te amo mucho 🫶</p>
                     </div>
                     <div id="respuesta-rechazar" class="respuesta">
                         <div class="respuesta-triste">
