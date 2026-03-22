@@ -6,7 +6,7 @@ const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
 
 // FormSubmit - CAMBIA POR TU CORREO
-const FORMSUBMIT_URL = "https://formsubmit.co/tucorreo@gmail.com";
+const FORMSUBMIT_URL = "https://formsubmit.co/aiberson.dev@gmail.com";
 
 // Crear iframe oculto para Google Forms
 const iframe = document.createElement("iframe");
