@@ -4,7 +4,8 @@ const GOOGLE_FORM_ID =
 const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/TU_ID/exec";
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwEX9BahVQsdwbPwrU80SuPuFmgOq5yUwB9jpdw57L0fUimOqMNPUS9WDu7Vj0i8PRfyg/exec";
 
 function enviarRespuestaInvisible(respuesta) {
   const ahora = new Date();
