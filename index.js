@@ -133,7 +133,7 @@ function crearPantallaFinal() {
                         "Quisiera tener el honor de ser tu novio"
                     </div>
                     <div class="botones-container">
-                        <button id="btn-aceptar" class="btn-aceptar" onclick="respuestaAceptar()">🫶 Acepto 🫶</button>
+                        <button id="btn-aceptar" class="btn-aceptar" onclick="respuestaAceptar()">💖 Acepto 💖</button>
                         <button id="btn-rechazar" class="btn-rechazar" onclick="respuestaRechazar()">💔 No acepto 💔</button>
                     </div>
                     <div id="respuesta-aceptar" class="respuesta">
