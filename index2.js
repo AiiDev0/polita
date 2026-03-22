@@ -1,5 +1,5 @@
 // ==================== DATOS DE LAS PÁGINAS ====================
-// ¡CAMBIAR! Pon aquí tus fotos y textos
+// ¡CAMBIAR! Pon aquí tus fotos y textos prueba
 const paginas = [
   {
     tipo: "historia",
