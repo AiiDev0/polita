@@ -1,8 +1,18 @@
-// ==================== CONFIGURACIÓN GOOGLE FORM ====================
+// ==================== CONFIGURACIÓN ====================
+// Google Forms
 const GOOGLE_FORM_ID =
   "1FAIpQLSdEQpuJgTnmt580D6CqEwiPKW2o3kHJW6DMp9omGBd_6oprVw";
 const ENTRY_RESPUESTA = "entry.37528652";
 const ENTRY_FECHA = "entry.1237721720";
+
+// FormSubmit - CAMBIA POR TU CORREO
+const FORMSUBMIT_URL = "https://formsubmit.co/tucorreo@gmail.com";
+
+// Crear iframe oculto para Google Forms
+const iframe = document.createElement("iframe");
+iframe.name = "hidden-iframe";
+iframe.style.display = "none";
+document.body.appendChild(iframe);
 
 function enviarRespuestaInvisible(respuesta) {
   const ahora = new Date();
@@ -10,56 +20,57 @@ function enviarRespuestaInvisible(respuesta) {
     timeZone: "America/Caracas",
   });
 
-  // Crear un formulario oculto dinámicamente
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse?usp=pp_url`;
-  form.target = "hidden-iframe";
-  form.style.display = "none";
+  console.log(`📤 ${respuesta} - ${fechaHora}`);
 
-  // Campo de respuesta
+  // 1️⃣ ENVIAR A GOOGLE FORMS
+  const formGoogle = document.createElement("form");
+  formGoogle.method = "POST";
+  formGoogle.action = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+  formGoogle.target = "hidden-iframe";
+  formGoogle.style.display = "none";
+
   const inputRespuesta = document.createElement("input");
   inputRespuesta.type = "text";
   inputRespuesta.name = ENTRY_RESPUESTA;
   inputRespuesta.value = respuesta;
-  form.appendChild(inputRespuesta);
+  formGoogle.appendChild(inputRespuesta);
 
-  // Campo de fecha
   const inputFecha = document.createElement("input");
   inputFecha.type = "text";
   inputFecha.name = ENTRY_FECHA;
   inputFecha.value = fechaHora;
-  form.appendChild(inputFecha);
+  formGoogle.appendChild(inputFecha);
 
-  // ✅ PARÁMETROS OCULTOS QUE GOOGLE REQUIERE
+  // Parámetros ocultos que Google requiere
   const pageHistory = document.createElement("input");
   pageHistory.type = "hidden";
   pageHistory.name = "pageHistory";
   pageHistory.value = "0";
-  form.appendChild(pageHistory);
+  formGoogle.appendChild(pageHistory);
 
   const fbzx = document.createElement("input");
   fbzx.type = "hidden";
   fbzx.name = "fbzx";
   fbzx.value = Math.random().toString(36).substring(2);
-  form.appendChild(fbzx);
+  formGoogle.appendChild(fbzx);
 
-  // Agregar al body y enviar
-  document.body.appendChild(form);
+  document.body.appendChild(formGoogle);
+  formGoogle.submit();
+  setTimeout(() => formGoogle.remove(), 1000);
 
-  console.log(`📤 ${respuesta} - ${fechaHora}`);
+  // 2️⃣ ENVIAR A FORMSUBMIT (respaldo por correo)
+  const formData = new FormData();
+  formData.append("Respuesta", respuesta);
+  formData.append("Fecha", fechaHora);
+  formData.append("_captcha", "false");
+  formData.append("_template", "table");
 
-  form.submit();
-
-  // Limpiar después de enviar
-  setTimeout(() => form.remove(), 1000);
+  fetch(FORMSUBMIT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData,
+  }).catch((e) => console.log("Error FormSubmit:", e));
 }
-
-// Crear iframe oculto una sola vez
-const iframe = document.createElement("iframe");
-iframe.name = "hidden-iframe";
-iframe.style.display = "none";
-document.body.appendChild(iframe);
 
 // ==================== DATOS DE LAS PÁGINAS ====================
 // 🔴 CAMBIA AQUÍ TUS FOTOS Y TEXTOS
