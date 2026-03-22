@@ -10,20 +10,25 @@ function enviarRespuestaInvisible(respuesta) {
     timeZone: "America/Caracas",
   });
 
-  const formData = new FormData();
-  formData.append(ENTRY_RESPUESTA, respuesta);
-  formData.append(ENTRY_FECHA, fechaHora);
+  // Crear la URL con los parámetros
+  const url = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+
+  // Crear el cuerpo de la petición con los datos
+  const bodyData = new URLSearchParams();
+  bodyData.append(ENTRY_RESPUESTA, respuesta);
+  bodyData.append(ENTRY_FECHA, fechaHora);
+  bodyData.append("submit", "Submit"); // Parámetro requerido
 
   console.log(`📤 ${respuesta} - ${fechaHora}`);
 
-  fetch(`https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`, {
+  fetch(url, {
     method: "POST",
     mode: "no-cors",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams(formData).toString(),
-  }).catch((e) => console.log("error:", e));
+    body: bodyData.toString(),
+  }).catch((e) => console.log("Error:", e));
 }
 
 // ==================== DATOS DE LAS PÁGINAS ====================
